@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+<ndll name="admob" if="ios" />
+<dependency name="AdSupport.framework" if="ios" />
+<dependency name="CoreTelephony.framework" if="ios" />
+<dependency name="MessageUI.framework" if="ios" />
+<dependency name="StoreKit.framework" if="ios" />
+<dependency name="SystemConfiguration.framework" if="ios" />
+</project>
