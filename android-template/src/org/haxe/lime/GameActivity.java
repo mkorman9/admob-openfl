@@ -229,12 +229,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	static public void showAd() {
 		activity.runOnUiThread(new Runnable() {
-				public void run() {
-					if (adInitialized && !adVisible) {
-						adLayout.removeAllViews();
-						adLayout.addView(adView, adMobLayoutParams);
-						adVisible = true;
-					}
+			public void run() {
+				if (adInitialized && !adVisible) {
+					adLayout.removeAllViews();
+					adLayout.addView(adView, adMobLayoutParams);
+					adVisible = true;
 				}
 			}
 		});
