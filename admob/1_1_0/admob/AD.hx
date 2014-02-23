@@ -19,6 +19,7 @@ class AD {
 	private static var testMode : Bool = false;
 	
 	#if android
+	private static var _initAd_func : Dynamic;
 	private static var _hideAd_func : Dynamic;
 	private static var _showAd_func : Dynamic;
 	
@@ -31,30 +32,36 @@ class AD {
 		
 		// on android screen aspect doesn't matter
 		if (bannerSize == SMART_BANNER_LANDSCAPE) bannerSize = SMART_BANNER_PORTRAIT;
+		
+		// call API
+		if (_initAd_func == null) {
+			_initAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "initAd",
+				"(Ljava/lang/String;IIIZ)V", true);
+		}
+
+		var args = new Array<Dynamic>();
+		args.push(admobID);
+		args.push(originX);
+		args.push(originY);
+		args.push(bannerSize);
+		args.push(testMode);
+		_initAd_func(args);
 	}
 	
 	public static function show() : Void {
 		if (_showAd_func == null) {
-			_showAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "showAd", 
-				"(Ljava/lang/String;IIIZI)V", true);
+			_showAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "showAd", "()V", true);
 		}
 		
-		var a = new Array<Dynamic>();
-		a.push(admobID);
-		a.push(originX);
-		a.push(originY);
-		a.push(bannerSize);
-		a.push(testMode);
-		a.push(0);
-		_showAd_func(a);
+		_showAd_func(new Array<Dynamic>());
 	}
 	
 	public static function hide() : Void {
-		if (_hideAd_func == null)
+		if (_hideAd_func == null) {
 			_hideAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "hideAd", "()V", true);
+		}
 		
-		var a = new Array<Dynamic>();
-		_hideAd_func(a);
+		_hideAd_func(new Array<Dynamic>());
 	}
 
 	public static function refresh() : Void {

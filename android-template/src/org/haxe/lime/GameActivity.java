@@ -81,7 +81,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 	public Handler mHandler;
 	
 	////////////////////////////////////////////////////////////////////////
-	static RelativeLayout mAdLayout;
+	static RelativeLayout adLayout;
+	static RelativeLayout.LayoutParams adMobLayoutParams;
+	static AdView adView;
+	static Boolean adVisible = false, adInitialized = false, adTestMode = false;
 	////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
@@ -145,13 +148,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 		////////////////////////////////////////////////////////////////////////
 		FrameLayout rootLayout = new FrameLayout(this); 
-		mView = new MainView(getApplication(),this);
-		mAdLayout = new RelativeLayout(this);
+		mView = new MainView(getApplication(), this);
+		adLayout = new RelativeLayout(this);
         
         RelativeLayout.LayoutParams adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		
         rootLayout.addView(mView);
-		rootLayout.addView(mAdLayout, adMobLayoutParams);
+		rootLayout.addView(adLayout, adMobLayoutParams);
 		
         setContentView(rootLayout); 
 		////////////////////////////////////////////////////////////////////////
@@ -182,63 +185,56 @@ public class GameActivity extends Activity implements SensorEventListener {
 	}
 	
 	////////////////////////////////////////////////////////////////////////
-    static AdView adView;
-    static Boolean adInited = false;
-    static Boolean adHided = true;
-        
-    static RelativeLayout.LayoutParams adMobLayoutParams;
-        
-    static public void initAd(final String id, final int x, final int y,final int size, final boolean testMode) {
+	static public void loadAd() {
+		AdRequest req = new AdRequest();
+		if(adTestMode) req.setTesting(true);
+
+		adView.loadAd(req);
+	}
+	
+	static public void initAd(final String id, final int x, final int y, final int size, final boolean testMode) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				String adID = id;
-								
-				if(size == 0)
+				adTestMode = testMode;
+				
+				if(size == 0) {
 					adView = new AdView(activity, AdSize.BANNER, adID);
-				else if(size == 1)
+				}
+				else if(size == 1) {
 					adView = new AdView(activity, AdSize.SMART_BANNER, adID);
-								
-				AdRequest req = new AdRequest();
-				if(testMode) req.setTesting(true);
-								
-                adView.loadAd(req);
-                adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
-                                 
-                if(x == 0 && y == 0) {
+				}
+
+				loadAd();
+				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
+       
+                if(x == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 }
-				else if(x == 0 && y == -1) {
-					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                }
-				else if(x == -1 && y == 0) {
+				else if(x == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 }
-				else if(x == -1 && y == -1) {
-					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                }
-				else {
+				
+				if(y == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-					adInited = true;
-                }
+				}
+				else if(y == -1) {
+					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+				}
+				
+				adInitialized = true;
 			}
 		});
-    }
+	}
 	
-	static public void showAd(final String id, final int x, final int y,final int size, final boolean testMode, final int preLoad) {
+	static public void showAd() {
 		activity.runOnUiThread(new Runnable() {
-			public void run() {
-				if(preLoad != 0 || adInited == false) {
-					initAd(id, x, y, size, testMode);
-				}
-									
-				if(preLoad == 0) {
-					mAdLayout.removeAllViews();
-					mAdLayout.addView(adView, adMobLayoutParams);
-					adHided = false;
+				public void run() {
+					if (adInitialized && !adVisible) {
+						adLayout.removeAllViews();
+						adLayout.addView(adView, adMobLayoutParams);
+						adVisible = true;
+					}
 				}
 			}
 		});
@@ -247,9 +243,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 	static public void hideAd() {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
-				if (adView != null && adHided == false){
-					mAdLayout.removeAllViews();
-					adView.loadAd(new AdRequest());
+				if (adInitialized && adVisible) {
+					adLayout.removeAllViews();
+					loadAd();
+					adVisible = false;
 				}
 			}
 		});
