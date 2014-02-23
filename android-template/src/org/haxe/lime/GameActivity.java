@@ -382,33 +382,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	
 	public static int getResourceID (String inFilename) {
-		
-		//if (inFilename.equals("MenuTrack")) return hedgehoggames.ForestBubbles.R.raw.assets_music_track_ogg;
-		//if (inFilename.equals("GameBackground")) return hedgehoggames.ForestBubbles.R.raw.assets_music_background_ogg;
-		//if (inFilename.equals("assets/music/background.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_music_background_ogg1;
-		//if (inFilename.equals("assets/music/track.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_music_track_ogg1;
-		//
-		//if (inFilename.equals("Click")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_click_ogg;
-		//if (inFilename.equals("Shot")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_shot_ogg;
-		//if (inFilename.equals("Counting")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_counting_ogg;
-		//if (inFilename.equals("Lost")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_lost_ogg;
-		//if (inFilename.equals("Bubble1")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble1_ogg;
-		//if (inFilename.equals("Bubble2")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble2_ogg;
-		//if (inFilename.equals("Bubble3")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble3_ogg;
-		//if (inFilename.equals("Bubble4")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble4_ogg;
-		//if (inFilename.equals("Move")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_move_ogg;
-		//if (inFilename.equals("Clap")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_clap_ogg;
-		//if (inFilename.equals("assets/sound/bubble1.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble2;
-		//if (inFilename.equals("assets/sound/bubble2.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble3;
-		//if (inFilename.equals("assets/sound/bubble3.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble4;
-		//if (inFilename.equals("assets/sound/bubble4.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_bubble5;
-		//if (inFilename.equals("assets/sound/clap.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_clap_ogg1;
-		//if (inFilename.equals("assets/sound/click.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_click_ogg1;
-		//if (inFilename.equals("assets/sound/counting.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_counting_ogg1;
-		//if (inFilename.equals("assets/sound/lost.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_lost_ogg1;
-		//if (inFilename.equals("assets/sound/move.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_move_ogg1;
-		//if (inFilename.equals("assets/sound/shot.ogg")) return hedgehoggames.ForestBubbles.R.raw.assets_sound_shot_ogg1;
-		//
+	
 		return -1;
 		
 	}
