@@ -2,8 +2,8 @@ Google AdMob extension for OpenFL applications. Working on both Android and iOS.
 
 **Instructions**
 
-1. Clone this repo using ```git clone https://github.com/mkorman9/admob-openfl``` command
-2. Include extension to your project ```<include name="PATH_TO_THE_EXTENSION/admob" /> ```
+1. Clone this repo using ```haxelib git admob https://github.com/mkorman9/admob-openfl``` command
+2. Include extension to your project ```<haxelib name="admob" /> ```
 3. Import AD class ```import admob.AD; ```
 4. Setup ads at the beginning of your code ```AD.init(ADMOB_ID, AD.LEFT, AD.BOTTOM, AD.BANNER, false);```
 where arguments are following:
@@ -19,12 +19,12 @@ where arguments are following:
 
 1. Add following code to your project.xml 
 ```xml
-<ios linker-flags="-force_load PATH_TO_THE_EXTENSION/admob/ndll/iPhone/libGoogleAdMobAds.a" />
+<ios linker-flags="-force_load __PATH_TO_THE_HAXELIB_DIR__/admob/git/ndll/iPhone/libGoogleAdMobAds.a" />
 ```
 2. After creating XCode project, drag libGoogleAdMobAds.a to Project Settings->Build Phases->Link with binaries
 3. (Optional) You can rebuild binaries on Mac OSX using five simple commands:
 ```
-cd PATH_TO_THE_EXTENSION/admob/project
+cd __PATH_TO_THE_HAXELIB_DIR__/admob/git/project
 haxelib run hxlibc Build.xml -Diphoneos
 haxelib run hxlibc Build.xml -Diphoneos -DHXCPP_ARMV7
 haxelib run hxlibc Build.xml -Diphonesim
