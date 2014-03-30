@@ -36,7 +36,7 @@ haxelib run hxlibc Build.xml
 1. Copy android-template directory to your project
 2. Add following code to your project.xml: 
 ```xml
-<java path="android-template/libs/GoogleAdMobAdsSdk-6.4.1.jar" if="android" />
+<java path="android-template/libs/google-play-services.jar" if="android" />
 <template path="android-template/AndroidManifest.xml" rename="AndroidManifest.xml" if="android" />
 <template path="android-template/src/org/haxe/lime/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java" if="android" />
 ```

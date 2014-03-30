@@ -44,7 +44,7 @@ import org.haxe.HXCPP;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import com.google.ads.*;
+import com.google.android.gms.ads.*;
 ////////////////////////////////////////////////////////////////////////
 
 public class GameActivity extends Activity implements SensorEventListener {
@@ -186,10 +186,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	////////////////////////////////////////////////////////////////////////
 	static public void loadAd() {
-		AdRequest req = new AdRequest();
-		if(adTestMode) req.setTesting(true);
-
-		adView.loadAd(req);
+		AdRequest adRequest = new AdRequest.Builder().build();
+		adView.loadAd(adRequest);
 	}
 	
 	static public void initAd(final String id, final int x, final int y, final int size, final boolean testMode) {
@@ -198,11 +196,14 @@ public class GameActivity extends Activity implements SensorEventListener {
 				String adID = id;
 				adTestMode = testMode;
 				
+				adView = new AdView(activity);
+				adView.setAdUnitId(adID);
+
 				if(size == 0) {
-					adView = new AdView(activity, AdSize.BANNER, adID);
+					adView.setAdSize(AdSize.BANNER);
 				}
 				else if(size == 1) {
-					adView = new AdView(activity, AdSize.SMART_BANNER, adID);
+					adView.setAdSize(AdSize.SMART_BANNER);
 				}
 
 				loadAd();
@@ -310,6 +311,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 			
 		}
 		
+		////////////////////////////////////////////////
+		if (adView != null) {
+			adView.pause();
+		}
+		////////////////////////////////////////////////
+		
 	}
 	
 	
@@ -327,6 +334,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 			sensorManager.registerListener (this, sensorManager.getDefaultSensor (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
 			
 		}
+	
+		////////////////////////////////////////////////
+		if (adView != null) {
+			adView.resume();
+		}
+		////////////////////////////////////////////////
 		
 	}
 	
