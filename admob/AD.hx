@@ -8,9 +8,8 @@ class AD {
 	public static var TOP : Int = 0;
 	public static var BOTTOM : Int = -1;
 	
-	public static var BANNER : Int = 0;
-	public static var SMART_BANNER_PORTRAIT : Int = 1;
-	public static var SMART_BANNER_LANDSCAPE : Int = 2;
+	public static var BANNER_PORTRAIT : Int = 1;
+	public static var BANNER_LANDSCAPE : Int = 2;
 	
 	private static var admobID : String;
 	private static var originX : Int = 0;
@@ -29,9 +28,6 @@ class AD {
 		originY = y;
 		bannerSize = size;
 		testMode = test;
-		
-		// on android screen aspect doesn't matter
-		if (bannerSize == SMART_BANNER_LANDSCAPE) bannerSize = SMART_BANNER_PORTRAIT;
 		
 		// call API
 		if (_initAd_func == null) {

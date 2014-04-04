@@ -14,10 +14,7 @@ namespace admobIOS {
 		
 		NSString *GADID = [[NSString alloc] initWithUTF8String: ID];
 
-		if (size == 0) {
-			bannerView_ = [[GADBannerView alloc] initWithAdSize : kGADAdSizeBanner];
-		}
-		else if (size == 1) {
+		if (size == 1) {
 			bannerView_ = [[GADBannerView alloc] initWithAdSize : kGADAdSizeSmartBannerPortrait];
 		}
 		else if (size == 2) {

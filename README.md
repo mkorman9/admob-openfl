@@ -5,12 +5,12 @@ Google AdMob extension for OpenFL applications. Working on both Android and iOS.
 1. Clone this repo using ```haxelib git admob https://github.com/mkorman9/admob-openfl``` command
 2. Include extension to your project ```<haxelib name="admob" /> ```
 3. Import AD class ```import admob.AD; ```
-4. Setup ads at the beginning of your code ```AD.init(ADMOB_ID, AD.LEFT, AD.BOTTOM, AD.BANNER, false);```
+4. Setup ads at the beginning of your code ```AD.init(ADMOB_ID, AD.LEFT, AD.BOTTOM, AD.BANNER_PORTRAIT, false);```
 where arguments are following:
   - Ad unit id.
   - Position in x axis. Could be ```AD.LEFT``` or ```AD.RIGHT```
   - Position in y axis. Could be ```AD.TOP``` or ```AD.BOTTOM```
-  - Banner size. Could be ```AD.BANNER```, ```AD.SMART_BANNER_PORTRAIT``` or ```AD.SMART_BANNER_LANDSCAPE``` (see google's documentation)
+  - Banner size. Could be ```AD.BANNER_PORTRAIT``` or ```AD.BANNER_LANDSCAPE``` (see google's documentation)
   - Test mode. Whether enable test ads or not. Default value is false.
 5. Show banner ```AD.show(); ```
 6. You can hide it anytime by calling ```AD.hide();```

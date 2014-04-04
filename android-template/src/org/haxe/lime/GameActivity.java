@@ -44,6 +44,7 @@ import org.haxe.HXCPP;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.graphics.Color;
 import com.google.android.gms.ads.*;
 ////////////////////////////////////////////////////////////////////////
 
@@ -198,13 +199,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 				
 				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
-
-				if(size == 0) {
-					adView.setAdSize(AdSize.BANNER);
-				}
-				else if(size == 1) {
-					adView.setAdSize(AdSize.SMART_BANNER);
-				}
+				adView.setAdSize(AdSize.SMART_BANNER);
 
 				loadAd();
 				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
@@ -233,7 +228,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 			public void run() {
 				if (adInitialized && !adVisible) {
 					adLayout.removeAllViews();
+					adView.setBackgroundColor(Color.BLACK);
 					adLayout.addView(adView, adMobLayoutParams);
+					adView.setBackgroundColor(0);
 					adVisible = true;
 				}
 			}
