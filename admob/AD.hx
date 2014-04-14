@@ -16,11 +16,17 @@ class AD {
 	private static var originY : Int = 0;
 	private static var bannerSize : Int = 0;
 	private static var testMode : Bool = false;
-	
-	#if android
+
+	private static var admobInterstitialID:String;
+	private static var testModeInterstitial:Bool;
+
+#if android
 	private static var _initAd_func : Dynamic;
 	private static var _hideAd_func : Dynamic;
 	private static var _showAd_func : Dynamic;
+	private static var _initInterstitial_func : Dynamic;
+	private static var _showInterstitial_func : Dynamic;
+
 	
 	public static function init(id : String, x : Int = 0, y : Int = 0, size : Int = 0, test : Bool = false) {
 		admobID = id;
@@ -43,7 +49,7 @@ class AD {
 		args.push(testMode);
 		_initAd_func(args);
 	}
-	
+
 	public static function show() : Void {
 		if (_showAd_func == null) {
 			_showAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "showAd", "()V", true);
@@ -62,8 +68,35 @@ class AD {
 
 	public static function refresh() : Void {
 	}
+
+	public static function initInterstitial(id : String, test : Bool = false) {
+		admobInterstitialID = id;
+		testModeInterstitial = test;
+
+		// call API
+		if (_initInterstitial_func == null) {
+			_initInterstitial_func = openfl.utils.JNI.createStaticMethod(
+				"org.haxe.lime.GameActivity", "initInterstitial", "(Ljava/lang/String;Z)V", true
+			);
+		}
+
+		var args = new Array<Dynamic>();
+		args.push(admobInterstitialID);
+		args.push(testModeInterstitial);
+		_initInterstitial_func(args);
+	}
+
+	public static function showInterstitial() : Void {
+		if (_showInterstitial_func == null) {
+			_showInterstitial_func = openfl.utils.JNI.createStaticMethod(
+				"org.haxe.lime.GameActivity", "displayInterstitial", "()V", true
+			);
+		}
+
+		_showInterstitial_func(new Array<Dynamic>());
+	}
 	
-	#elseif ios
+#elseif ios
 	public static function init(id : String, x : Int = 0, y : Int = 0, size : Int = 0, test : Bool = false) {
 		admobID = id;
 		originX = x;
@@ -85,13 +118,13 @@ class AD {
 	public static function refresh() : Void {
 		admob_ad_refresh();
 	}
-	
+
 	private static var admob_ad_init = flash.Lib.load("admob", "admob_ad_init", 5);
 	private static var admob_ad_show = flash.Lib.load("admob", "admob_ad_show", 0);
 	private static var admob_ad_hide = flash.Lib.load("admob", "admob_ad_hide", 0);
 	private static var admob_ad_refresh = flash.Lib.load("admob", "admob_ad_refresh", 0);
 	
-	#else
+#else
 	public static function init(id : String, x : Int = 0, y : Int = 0, size : Int = 0, test : Bool = false) {
 	}
 	public static function show() : Void {
@@ -99,6 +132,10 @@ class AD {
 	public static function hide() : Void {
 	}
 	public static function refresh() : Void {
+	}
+	public static function initInterstitial(id : String, test : Bool = false) {
+	}
+	public static function showInterstitial() : Void {
 	}
 	#end
 }

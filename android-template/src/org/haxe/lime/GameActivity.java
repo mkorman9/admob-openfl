@@ -44,7 +44,6 @@ import org.haxe.HXCPP;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.graphics.Color;
 import com.google.android.gms.ads.*;
 ////////////////////////////////////////////////////////////////////////
 
@@ -86,7 +85,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 	static RelativeLayout.LayoutParams adMobLayoutParams;
 	static AdView adView;
 	static Boolean adVisible = false, adInitialized = false, adTestMode = false;
-	////////////////////////////////////////////////////////////////////////
+    static InterstitialAd interstitial;
+    ////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
 	private MainView mView;
@@ -199,7 +199,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 				
 				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
-				adView.setAdSize(AdSize.SMART_BANNER);
+
+				if(size == 0) {
+					adView.setAdSize(AdSize.BANNER);
+				}
+				else if(size == 1) {
+					adView.setAdSize(AdSize.SMART_BANNER);
+				}
 
 				loadAd();
 				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
@@ -228,9 +234,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 			public void run() {
 				if (adInitialized && !adVisible) {
 					adLayout.removeAllViews();
-					adView.setBackgroundColor(Color.BLACK);
 					adLayout.addView(adView, adMobLayoutParams);
-					adView.setBackgroundColor(0);
 					adVisible = true;
 				}
 			}
@@ -248,6 +252,32 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 	}
+
+    static public void initInterstitial(final String id, final boolean testMode) {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                // Create the interstitial.
+                interstitial = new InterstitialAd(activity);
+                interstitial.setAdUnitId(id);
+
+                // Create ad request.
+                AdRequest adRequest = new AdRequest.Builder().build();
+
+                // Begin loading your interstitial.
+                interstitial.loadAd(adRequest);
+            }
+        });
+    }
+
+    static public void displayInterstitial() {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                if (interstitial.isLoaded()) {
+                    interstitial.show();
+                }
+            }
+        });
+    }
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static double CapabilitiesGetPixelAspectRatio () {
