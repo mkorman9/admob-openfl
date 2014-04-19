@@ -7,6 +7,8 @@ namespace admobIOS {
 	void showAd();
 	void hideAd();
 	void refreshAd();
+	void initInterstitial(const char *ID, bool testMode);
+	void showInterstitial();
 
 }
 

@@ -38,3 +38,14 @@ value admob_ad_refresh() {
 }
 DEFINE_PRIM(admob_ad_refresh,0);
 
+value admob_ad_init_interstitial(value id, value testMode) {
+	initInterstitial(val_string(id), val_bool(testMode));
+	return alloc_null();
+}
+DEFINE_PRIM(admob_ad_init_interstitial, 2);
+
+value admob_ad_show_interstitial() {
+	showInterstitial();
+	return alloc_null();
+}
+DEFINE_PRIM(admob_ad_show_interstitial, 0);
