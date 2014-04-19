@@ -5,6 +5,7 @@ import flash.Lib;
 class AD {
 	public static var LEFT : Int = 0;
 	public static var RIGHT : Int = -1;
+	public static var CENTER : Int = -2;
 	public static var TOP : Int = 0;
 	public static var BOTTOM : Int = -1;
 	
@@ -89,7 +90,7 @@ class AD {
 	public static function showInterstitial() : Void {
 		if (_showInterstitial_func == null) {
 			_showInterstitial_func = openfl.utils.JNI.createStaticMethod(
-				"org.haxe.lime.GameActivity", "displayInterstitial", "()V", true
+				"org.haxe.lime.GameActivity", "showInterstitial", "()V", true
 			);
 		}
 
@@ -119,11 +120,24 @@ class AD {
 		admob_ad_refresh();
 	}
 
+	public static function initInterstitial(id : String, test : Bool = false) {
+		admobInterstitialID = id;
+		testModeInterstitial = test;
+
+		admob_ad_init_interstitial(admobInterstitialID, testModeInterstitial);
+	}
+
+	public static function showInterstitial() : Void {
+		admob_ad_show_interstitial();
+	}
+
 	private static var admob_ad_init = flash.Lib.load("admob", "admob_ad_init", 5);
 	private static var admob_ad_show = flash.Lib.load("admob", "admob_ad_show", 0);
 	private static var admob_ad_hide = flash.Lib.load("admob", "admob_ad_hide", 0);
 	private static var admob_ad_refresh = flash.Lib.load("admob", "admob_ad_refresh", 0);
-	
+	private static var admob_ad_init_interstitial = flash.Lib.load("admob", "admob_ad_init_interstitial", 2);
+	private static var admob_ad_show_interstitial = flash.Lib.load("admob", "admob_ad_show_interstitial", 0);
+
 #else
 	public static function init(id : String, x : Int = 0, y : Int = 0, size : Int = 0, test : Bool = false) {
 	}
@@ -137,5 +151,5 @@ class AD {
 	}
 	public static function showInterstitial() : Void {
 	}
-	#end
+#end
 }

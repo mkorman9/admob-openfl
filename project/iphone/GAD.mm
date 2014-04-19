@@ -1,12 +1,16 @@
 #include <AD.h>
 #import <UIKit/UIKit.h>
 #import <GADBannerView.h>
+#import <GADInterstitial.h>
 
 namespace admobIOS {
 
     static GADBannerView *bannerView_;
 	static UIViewController *rootView;
     static bool testAds;
+    
+    static GADInterstitial *interstitial_;
+    static bool testInterstitial;
 	
 	void initAd(const char *ID, int x, int y, int size, bool testMode) {
 		testAds = testMode;
@@ -60,7 +64,34 @@ namespace admobIOS {
 						GAD_SIMULATOR_ID,
 						nil];
 		}
-
+        
 		[bannerView_ loadRequest:request];
 	}
+    
+	void initInterstitial(const char *ID, bool testMode) {
+		testInterstitial = testMode;
+		
+		NSString *GADID = [[NSString alloc] initWithUTF8String: ID];
+        
+        interstitial_ = [[GADInterstitial alloc] init];
+        interstitial_.adUnitID = GADID;
+		//interstitial_.rootViewController = rootView;
+        
+		GADRequest *request = [[GADRequest alloc] init];
+		if (testInterstitial) {
+			request.testing = YES;
+			request.testDevices = [NSArray arrayWithObjects:
+                                   GAD_SIMULATOR_ID,
+                                   nil];
+		}
+        
+        [interstitial_ loadRequest:[GADRequest request]];
+	}
+    
+    void showInterstitial() {
+		//[rootView.view addSubview: interstitial_];
+		rootView = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        [interstitial_ presentFromRootViewController:rootView];
+    }
+    
 }

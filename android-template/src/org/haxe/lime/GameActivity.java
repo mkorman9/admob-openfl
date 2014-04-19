@@ -196,8 +196,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 			public void run() {
 				String adID = id;
 				adTestMode = testMode;
-				
-				adView = new AdView(activity);
+
+                if (activity == null) {
+                    return;
+                }
+
+                adView = new AdView(activity);
 				adView.setAdUnitId(adID);
 
 				if(size == 0) {
@@ -216,12 +220,18 @@ public class GameActivity extends Activity implements SensorEventListener {
 				else if(x == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
+				else if(x == -2) {
+					adMobLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                }
 				
 				if(y == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 				}
 				else if(y == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+				}
+				else if(y == -2) {
+					adMobLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 				}
 				
 				adInitialized = true;
