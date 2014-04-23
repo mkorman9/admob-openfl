@@ -7,7 +7,7 @@
 	
 	<uses-sdk android:minSdkVersion="::ANDROID_MINIMUM_SDK_VERSION::" android:targetSdkVersion="::ANDROID_TARGET_SDK_VERSION::"/>
 	
-	<application android:label="::APP_TITLE::" android:debuggable="false"::if (HAS_ICON):: android:icon="@drawable/icon"::end::>
+	<application android:label="::APP_TITLE::" android:debuggable="::DEBUG::"::if (HAS_ICON):: android:icon="@drawable/icon"::end::>
 		
 		<meta-data android:name="com.google.android.gms.version" android:value="4323000" />
 		

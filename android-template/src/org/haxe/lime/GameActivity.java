@@ -44,6 +44,7 @@ import org.haxe.HXCPP;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.graphics.Color;
 import com.google.android.gms.ads.*;
 ////////////////////////////////////////////////////////////////////////
 
@@ -85,8 +86,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	static RelativeLayout.LayoutParams adMobLayoutParams;
 	static AdView adView;
 	static Boolean adVisible = false, adInitialized = false, adTestMode = false;
-    static InterstitialAd interstitial;
-    ////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
 	private MainView mView;
@@ -111,41 +111,22 @@ public class GameActivity extends Activity implements SensorEventListener {
 		//getResources().getAssets();
 		
 		requestWindowFeature (Window.FEATURE_NO_TITLE);
+		
 		::if WIN_FULLSCREEN::
-		getWindow ().addFlags (WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			::if (ANDROID_TARGET_SDK_VERSION < 19)::
+				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+					| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			::end::
 		::end::
 		
 		
 		metrics = new DisplayMetrics ();
 		getWindowManager ().getDefaultDisplay ().getMetrics (metrics);
 		
-		// Pre-load these, so the C++ knows where to find them
-		
-		//if (mMainView == null) {
-			
-			Log.d ("lime", "mMainView is NULL");
-			
-			::foreach ndlls::
-			System.loadLibrary ("::name::");::end::
-			HXCPP.run ("ApplicationMain");
-			
-			//mMainView = new MainView (getApplication (), this);
-			
-		/*} else {
-			
-			ViewGroup parent = (ViewGroup)mMainView.getParent ();
-			
-			if (parent != null) {
-				
-				parent.removeView (mMainView);
-				
-			}
-			
-			mMainView.onResume ();
-			
-		}
-		
-		mView = mMainView;*/
+		::foreach ndlls::
+		System.loadLibrary ("::name::");
+		::end::
+		HXCPP.run ("ApplicationMain");
 
 		////////////////////////////////////////////////////////////////////////
 		FrameLayout rootLayout = new FrameLayout(this); 
@@ -160,6 +141,8 @@ public class GameActivity extends Activity implements SensorEventListener {
         setContentView(rootLayout); 
 		////////////////////////////////////////////////////////////////////////
 		
+		Extension.mainView = mView;
+		
 		sensorManager = (SensorManager)activity.getSystemService (Context.SENSOR_SERVICE);
 		
 		if (sensorManager != null) {
@@ -168,6 +151,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 			sensorManager.registerListener (this, sensorManager.getDefaultSensor (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
 			
 		}
+		
+		Extension.packageName = getApplicationContext ().getPackageName ();
 		
 		if (extensions == null) {
 			
@@ -185,6 +170,32 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
+	// IMMERSIVE MODE SUPPORT
+	::if (WIN_FULLSCREEN)::::if (ANDROID_TARGET_SDK_VERSION >= 19)::
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		
+		if(hasFocus) {
+			hideSystemUi();
+		}
+	}
+
+	private void hideSystemUi() {
+		View decorView = this.getWindow().getDecorView();
+		
+		decorView.setSystemUiVisibility(
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+			| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+			| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+			| View.SYSTEM_UI_FLAG_FULLSCREEN
+			| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+	}
+	
+	::end::::end::
+	
 	////////////////////////////////////////////////////////////////////////
 	static public void loadAd() {
 		AdRequest adRequest = new AdRequest.Builder().build();
@@ -196,20 +207,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 			public void run() {
 				String adID = id;
 				adTestMode = testMode;
-
-                if (activity == null) {
-                    return;
-                }
-
-                adView = new AdView(activity);
+				
+				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
-
-				if(size == 0) {
-					adView.setAdSize(AdSize.BANNER);
-				}
-				else if(size == 1) {
-					adView.setAdSize(AdSize.SMART_BANNER);
-				}
+				adView.setAdSize(AdSize.SMART_BANNER);
 
 				loadAd();
 				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
@@ -220,18 +221,12 @@ public class GameActivity extends Activity implements SensorEventListener {
 				else if(x == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
-				else if(x == -2) {
-					adMobLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                }
 				
 				if(y == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 				}
 				else if(y == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-				}
-				else if(y == -2) {
-					adMobLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 				}
 				
 				adInitialized = true;
@@ -244,7 +239,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 			public void run() {
 				if (adInitialized && !adVisible) {
 					adLayout.removeAllViews();
+					adView.setBackgroundColor(Color.BLACK);
 					adLayout.addView(adView, adMobLayoutParams);
+					adView.setBackgroundColor(0);
 					adVisible = true;
 				}
 			}
@@ -262,32 +259,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 	}
-
-    static public void initInterstitial(final String id, final boolean testMode) {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                // Create the interstitial.
-                interstitial = new InterstitialAd(activity);
-                interstitial.setAdUnitId(id);
-
-                // Create ad request.
-                AdRequest adRequest = new AdRequest.Builder().build();
-
-                // Begin loading your interstitial.
-                interstitial.loadAd(adRequest);
-            }
-        });
-    }
-
-    static public void displayInterstitial() {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                if (interstitial.isLoaded()) {
-                    interstitial.show();
-                }
-            }
-        });
-    }
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static double CapabilitiesGetPixelAspectRatio () {
@@ -433,6 +404,10 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	public static int getResourceID (String inFilename) {
 	
+		//::foreach assets::::if (type == "music")::if (inFilename.equals("::id::")) return ::APP_PACKAGE::.R.raw.::flatName::;
+		//::end::::end::
+		//::foreach assets::::if (type == "sound")::if (inFilename.equals("::id::")) return ::APP_PACKAGE::.R.raw.::flatName::;
+		//::end::::end::
 		return -1;
 		
 	}
@@ -557,6 +532,30 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
+	@Override public void onLowMemory () {
+		
+		super.onLowMemory ();
+		
+		for (Extension extension : extensions) {
+			
+			extension.onLowMemory ();
+			
+		}
+		
+	}
+	
+	
+	@Override protected void onNewIntent (final Intent intent) {
+		
+		for (Extension extension : extensions) {
+			
+			extension.onNewIntent (intent);
+			
+		}
+		
+		super.onNewIntent (intent);
+		
+	}
 	
 	@Override protected void onPause () {
 		
@@ -654,6 +653,17 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
+	@Override public void onTrimMemory (int level) {
+		
+		super.onTrimMemory (level);
+		
+		for (Extension extension : extensions) {
+			
+			extension.onTrimMemory (level);
+			
+		}
+		
+	}
 	
 	public static void popView () {
 		
