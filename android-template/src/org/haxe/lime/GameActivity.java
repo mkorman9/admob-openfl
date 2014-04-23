@@ -86,6 +86,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	static RelativeLayout.LayoutParams adMobLayoutParams;
 	static AdView adView;
 	static Boolean adVisible = false, adInitialized = false, adTestMode = false;
+	static InterstitialAd interstitial;
 	////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
@@ -208,9 +209,19 @@ public class GameActivity extends Activity implements SensorEventListener {
 				String adID = id;
 				adTestMode = testMode;
 				
+				if (activity == null) {
+					return;
+				}
+
 				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
-				adView.setAdSize(AdSize.SMART_BANNER);
+				
+				if(size == 0) {
+					adView.setAdSize(AdSize.BANNER);
+				}
+				else if(size == 1) {
+					adView.setAdSize(AdSize.SMART_BANNER);
+				}
 
 				loadAd();
 				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
@@ -221,6 +232,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 				else if(x == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
+				else if(x == -2) {
+					adMobLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                }
 				
 				if(y == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -228,6 +242,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 				else if(y == -1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 				}
+				else if(y == -2) {
+					adMobLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+                }
 				
 				adInitialized = true;
 			}
@@ -259,6 +276,32 @@ public class GameActivity extends Activity implements SensorEventListener {
 			}
 		});
 	}
+	
+	static public void initInterstitial(final String id, final boolean testMode) {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                // Create the interstitial.
+                interstitial = new InterstitialAd(activity);
+                interstitial.setAdUnitId(id);
+
+                // Create ad request.
+                AdRequest adRequest = new AdRequest.Builder().build();
+
+                // Begin loading your interstitial.
+                interstitial.loadAd(adRequest);
+            }
+        });
+    }
+
+    static public void displayInterstitial() {
+        activity.runOnUiThread(new Runnable() {
+            public void run() {
+                if (interstitial.isLoaded()) {
+                    interstitial.show();
+                }
+            }
+        });
+    }
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static double CapabilitiesGetPixelAspectRatio () {
