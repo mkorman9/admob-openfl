@@ -114,10 +114,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 		requestWindowFeature (Window.FEATURE_NO_TITLE);
 		
 		::if WIN_FULLSCREEN::
-			::if (ANDROID_TARGET_SDK_VERSION < 19)::
-				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-					| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			::end::
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
+				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		::end::
 		
 		
@@ -170,32 +168,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 		
 	}
-	
-	// IMMERSIVE MODE SUPPORT
-	::if (WIN_FULLSCREEN)::::if (ANDROID_TARGET_SDK_VERSION >= 19)::
-	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		
-		if(hasFocus) {
-			hideSystemUi();
-		}
-	}
-
-	private void hideSystemUi() {
-		View decorView = this.getWindow().getDecorView();
-		
-		decorView.setSystemUiVisibility(
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-			| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-			| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-			| View.SYSTEM_UI_FLAG_FULLSCREEN
-			| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-	}
-	
-	::end::::end::
 	
 	////////////////////////////////////////////////////////////////////////
 	static public void loadAd() {
