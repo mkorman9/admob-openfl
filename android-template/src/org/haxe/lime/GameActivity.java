@@ -175,7 +175,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 		adView.loadAd(adRequest);
 	}
 	
-	static public void initAd(final String id, final int x, final int y, final int size, final boolean testMode) {
+	static public void initAd(final String id, final int x, final int y, final boolean testMode) {
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				String adID = id;
@@ -187,13 +187,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
 				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
-				
-				if(size == 0) {
-					adView.setAdSize(AdSize.BANNER);
-				}
-				else if(size == 1) {
-					adView.setAdSize(AdSize.SMART_BANNER);
-				}
+				adView.setAdSize(AdSize.SMART_BANNER);
 
 				loadAd();
 				adMobLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 
@@ -201,20 +195,20 @@ public class GameActivity extends Activity implements SensorEventListener {
                 if(x == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 }
-				else if(x == -1) {
+				else if(x == 1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 }
-				else if(x == -2) {
+				else if(x == 2) {
 					adMobLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 }
 				
 				if(y == 0) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 				}
-				else if(y == -1) {
+				else if(y == 1) {
 					adMobLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 				}
-				else if(y == -2) {
+				else if(y == 2) {
 					adMobLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
                 }
 				
@@ -249,18 +243,22 @@ public class GameActivity extends Activity implements SensorEventListener {
 		});
 	}
 	
+	static public void loadInterstitial() {
+		AdRequest adRequest = new AdRequest.Builder().build();
+		interstitial.loadAd(adRequest);
+	}
+	
 	static public void initInterstitial(final String id, final boolean testMode) {
         activity.runOnUiThread(new Runnable() {
             public void run() {
-                // Create the interstitial.
+				if (activity == null) {
+					return;
+				}
+				
                 interstitial = new InterstitialAd(activity);
                 interstitial.setAdUnitId(id);
 
-                // Create ad request.
-                AdRequest adRequest = new AdRequest.Builder().build();
-
-                // Begin loading your interstitial.
-                interstitial.loadAd(adRequest);
+                loadInterstitial();
             }
         });
     }

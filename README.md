@@ -28,10 +28,10 @@ don't forget to replace ```__PATH_TO_THE_HAXELIB_DIR__``` with real path to your
 3. (Optional) You can rebuild binaries on Mac OSX using five simple commands:
 ```
 cd __PATH_TO_THE_HAXELIB_DIR__/admob/git/project
-haxelib run hxlibc Build.xml -Diphoneos
-haxelib run hxlibc Build.xml -Diphoneos -DHXCPP_ARMV7
-haxelib run hxlibc Build.xml -Diphonesim
-haxelib run hxlibc Build.xml
+haxelib run hxcpp Build.xml -Diphoneos
+haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7
+haxelib run hxcpp Build.xml -Diphonesim
+haxelib run hxcpp Build.xml
 ```
 
 **Prerequisites on Android**

@@ -4,13 +4,13 @@ import flash.Lib;
 
 class AD {
 	public static var LEFT : Int = 0;
-	public static var RIGHT : Int = -1;
-	public static var CENTER : Int = -2;
+	public static var RIGHT : Int = 1;
+	public static var CENTER : Int = 2;
 	public static var TOP : Int = 0;
-	public static var BOTTOM : Int = -1;
+	public static var BOTTOM : Int = 1;
 	
-	public static var BANNER_PORTRAIT : Int = 1;
-	public static var BANNER_LANDSCAPE : Int = 2;
+	public static var BANNER_PORTRAIT : Int = 0;
+	public static var BANNER_LANDSCAPE : Int = 1;
 	
 	private static var admobID : String;
 	private static var originX : Int = 0;
@@ -39,14 +39,13 @@ class AD {
 		// call API
 		if (_initAd_func == null) {
 			_initAd_func = openfl.utils.JNI.createStaticMethod("org.haxe.lime.GameActivity", "initAd",
-				"(Ljava/lang/String;IIIZ)V", true);
+				"(Ljava/lang/String;IIZ)V", true);
 		}
 
 		var args = new Array<Dynamic>();
 		args.push(admobID);
 		args.push(originX);
 		args.push(originY);
-		args.push(bannerSize);
 		args.push(testMode);
 		_initAd_func(args);
 	}

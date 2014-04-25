@@ -18,21 +18,28 @@ namespace admobIOS {
 		
 		NSString *GADID = [[NSString alloc] initWithUTF8String: ID];
 
-		if (size == 1) {
+		if (size == 0) {
 			bannerView_ = [[GADBannerView alloc] initWithAdSize : kGADAdSizeSmartBannerPortrait];
 		}
-		else if (size == 2) {
+		else if (size == 1) {
 			bannerView_ = [[GADBannerView alloc] initWithAdSize : kGADAdSizeSmartBannerLandscape];
 		}
 		
 		int xPos = 0;
 		int yPos = 0;
 		
-		if (x == -1) {
+		if (x == 1) {
 			xPos = rootView.view.frame.size.width - bannerView_.bounds.size.width;
 		}
-		if (y == -1) {
+		else if (x == 2) {
+			xPos = (rootView.view.frame.size.width - bannerView_.bounds.size.width) / 2;
+		}
+		
+		if (y == 1) {
 			yPos = rootView.view.frame.size.height - bannerView_.bounds.size.height;
+		}
+		else if (y == 2) {
+			yPos = (rootView.view.frame.size.height - bannerView_.bounds.size.height) / 2;
 		}
 		
 		[bannerView_ setFrame: CGRectMake(
