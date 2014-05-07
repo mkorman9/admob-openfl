@@ -263,7 +263,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         });
     }
 
-    static public void displayInterstitial() {
+    static public void showInterstitial() {
         activity.runOnUiThread(new Runnable() {
             public void run() {
                 if (interstitial.isLoaded()) {
