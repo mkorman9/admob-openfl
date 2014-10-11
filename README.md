@@ -1,4 +1,5 @@
 Google AdMob extension for OpenFL applications. Working on both Android and iOS. Code is heavily based on NMEX extension which is pretty much outdated right now.
+This forked version updates the Google Play Services library to the revision 20. It was only tested on Android.
 
 **Instructions**
 
@@ -42,4 +43,5 @@ haxelib run hxcpp Build.xml
 <java path="android-template/libs/google-play-services.jar" if="android" />
 <template path="android-template/AndroidManifest.xml" rename="AndroidManifest.xml" if="android" />
 <template path="android-template/src/org/haxe/lime/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java" if="android" />
+<template path="android-template/res" rename="res" if="android" />
 ```
